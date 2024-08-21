@@ -1,0 +1,21 @@
+<!-- templates/article_edit.html -->
+
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-6 offset-lg-3 col-md-8 offset-md-2 col-sm-12">
+            <h1 class="text-center text-primary mb-4">Edit Article</h1>
+            <form action="" method="post" class="shadow-sm p-4 rounded bg-light">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <div class="text-center">
+                    <button class="btn btn-success mt-3" type="submit">Update Article</button>
+                    <a href="{% url 'article_detail' object.pk %}" class="btn btn-outline-secondary mt-3 ms-2">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

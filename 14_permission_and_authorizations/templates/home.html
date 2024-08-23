@@ -1,0 +1,110 @@
+<!-- templates/home.html -->
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock title %}
+
+{% block content %}
+<div class="home-container">
+    {% if user.is_authenticated %}
+        <div class="welcome-message">
+            <h1>Welcome, {{ user.username }}!</h1>
+        </div>
+        <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button class="btn btn-primary" type="submit">Log Out</button>
+        </form>
+        <p><a class="btn btn-primary" href="{% url 'article_list' %}" role="button">View all articles</a></p> <!-- new -->
+    {% else %}
+        <div class="welcome-message">
+            <h1>Welcome to Our Site!</h1>
+            <p class="alert alert-info  text-center">You are not logged in</p>
+            <a class="btn btn-danger" href="{% url 'login' %}">Log In</a>
+            <a class="btn  btn-outline-danger" href="{% url 'signup' %}">Sign Up</a>
+        </div>
+    {% endif %}
+</div>
+
+<div class="butterfly-animation">
+    <div class="butterfly"></div>
+    <div class="butterfly butterfly-2"></div>
+    <div class="butterfly butterfly-3"></div>
+</div>
+{% endblock content %}
+
+{% block extra_css %}
+<style>
+    .home-container {
+        text-align: center;
+        margin: 50px auto;
+        max-width: 600px;
+        padding: 30px;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .welcome-message h1 {
+        color: #333;
+        font-size: 2.5em;
+        margin-bottom: 10px;
+    }
+
+    .welcome-message p {
+        font-size: 1.2em;
+        color: #555;
+        margin-bottom: 20px;
+    }
+
+    .btn-primary {
+        margin-top: 20px;
+    }
+
+    /* Butterfly Animation */
+    .butterfly-animation {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        pointer-events: none;
+    }
+
+    .butterfly {
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        width: 50px;
+        height: 50px;
+        background-image: url('https://png.pngtree.com/png-clipart/20230423/original/pngtree-color-good-looking-butterfly-specimen-png-image_9092681.png'); /* replace with actual butterfly image URL */
+        background-size: cover;
+        animation: fly 15s infinite ease-in-out;
+    }
+
+    .butterfly-2 {
+        animation-delay: 5s;
+    }
+
+    .butterfly-3 {
+        animation-delay: 10s;
+    }
+
+    @keyframes fly {
+        0% {
+            transform: translate(-50%, 0) rotate(0deg);
+        }
+        25% {
+            transform: translate(200px, -300px) rotate(45deg);
+        }
+        50% {
+            transform: translate(-200px, -600px) rotate(-45deg);
+        }
+        75% {
+            transform: translate(100px, -900px) rotate(45deg);
+        }
+        100% {
+            transform: translate(-50%, -1200px) rotate(0deg);
+        }
+    }
+</style>
+{% endblock extra_css %}

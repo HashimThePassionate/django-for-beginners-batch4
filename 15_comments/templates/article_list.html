@@ -1,0 +1,62 @@
+<!-- templates/article_list.html -->
+
+{% extends "base.html" %}
+{% block title %}Articles{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        {% for article in article_list %}
+        <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1 col-sm-12 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white">
+                    <span class="fw-bold">
+                        <a href="{{ article.get_absolute_url }}" class="text-white text-decoration-none">{{ article.title }}</a>
+                    </span>
+                    <span class="float-end text-muted small">by {{ article.author }} | {{ article.date }}</span>
+                </div>
+                <div class="card-body">
+                    <p class="text-justify">
+                        <p class="text-justify">
+                            {{ article.body|slice:":200" }}{% if article.body|length > 200 %}...
+                                <a href="{% if request.user.is_authenticated %}
+                                {{ article.get_absolute_url }}{% else %}{% url 'signup' %}{% endif %}" class="btn btn-link btn-sm">
+                                    More
+                                </a>
+                            {% endif %}
+                        </p>
+                        
+                    </p>
+                </div>
+                <div class="card-footer">
+                    {% if article.comment_set.exists %}
+                        {% for comment in article.comment_set.all %}
+                            <div class="d-flex align-items-start mb-3">
+                                <div class="me-2">
+                                    <img src="https://via.placeholder.com/40" alt="Avatar" class="rounded-circle">
+                                </div>
+                                <div>
+                                    <p class="mb-1">
+                                        <span class="fw-bold">{{ comment.author }}</span>
+                                        <small class="text-muted">&middot; {{ comment.created_at|date:"M d, Y, H:i" }}</small>
+                                    </p>
+                                    <p class="mb-0">{{ comment.comment }}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% comment %} {% else %}
+                        <p class="text-muted">No comments yet.</p> {% endcomment %}
+                    {% endif %}
+                </div>
+                <div class="card-footer bg-light text-center">
+                    {% if article.author.pk == request.user.pk %}
+                    <p><a href="{% url 'article_edit' article.pk %}">Edit</a>
+                    <a href="{% url 'article_delete' article.pk %}">Delete</a></p>
+                     {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}

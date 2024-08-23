@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1 col-sm-12">
+            <div class="article-entry">
+                <h2 class="fw-bold text-primary">{{ object.title }}</h2>
+                <p class="text-muted">by <span class="fw-semibold">{{ object.author }}</span> | {{ object.date }}</p>
+                <hr />
+                <div class="mb-4">
+                    <p class="text-justify">{{ object.body }}</p>
+                </div>
+            </div>
+
+            <!-- Comments Section -->
+            <div class="comments-section mt-5">
+                <h4 class="fw-bold text-secondary">Comments</h4>
+                <hr />
+                {% if object.comment_set.exists %}
+                    {% for comment in object.comment_set.all %}
+                        <div class="d-flex align-items-start mb-3">
+                            <div class="me-2">
+                                <img src="https://via.placeholder.com/40" alt="Avatar" class="rounded-circle">
+                            </div>
+                            <div>
+                                <p class="mb-1">
+                                    <span class="fw-bold">{{ comment.author }}</span>
+                                    <small class="text-muted">&middot; {{ comment.created_at|date:"M d, Y, H:i" }}</small>
+                                </p>
+                                <p class="mb-0">{{ comment.comment }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% comment %} {% else %}
+                    <p class="text-muted">No comments yet. Be the first to comment!</p> {% endcomment %}
+                {% endif %}
+            </div>
+             <!-- Comments Form -->
+            <div class="mt-5">
+                <h4 class="fw-bold text-secondary">Add a Comment</h4>
+                <hr />
+                <form action="" method="post" class="bg-light p-4 rounded shadow-sm">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="d-flex justify-content-end mt-3">
+                        <button class="btn btn-success btn-sm" type="submit">Save Comment</button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="d-flex justify-content-between mt-4">
+                <div class="card-footer bg-light text-center">
+                    {% if object.author.pk == request.user.pk %}
+                    <p>
+                        <a class="btn btn-outline-primary btn-sm" href="{% url 'article_edit' object.pk %}">Edit</a>
+                        <a class="btn btn-outline-danger btn-sm" href="{% url 'article_delete' object.pk %}">Delete</a>
+                    </p>
+                    {% endif %}
+                </div>
+                <div>
+                    <a class="btn btn-outline-secondary btn-sm" href="{% url 'article_list' %}">Back to All Articles</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
